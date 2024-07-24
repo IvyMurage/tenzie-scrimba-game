@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Die from "./Die"
 import { nanoid } from "nanoid"
 import ReactConfetti from "react-confetti"
@@ -26,6 +26,7 @@ function App() {
     miniSeconds: 0,
     maxSeconds: 0
   })
+  const ref = useRef<number>(0)
 
   useEffect(() => {
     dice.every(die => die.isHeld === true) && new Set(dice.map(die => die.value)).size === 1 && setTenzie(true)
@@ -40,41 +41,49 @@ function App() {
   }
 
   useEffect(() => {
-    const intervalId = setInterval(() => setSeconds((prevSecond) => {
-      if (prevSecond.miniSeconds < 9) {
-        return {
-          ...prevSecond,
-          miniSeconds: prevSecond.miniSeconds + 1
+    if (!tenzies) {
+      ref.current = setInterval(() => setSeconds((prevSecond) => {
+        if (prevSecond.miniSeconds < 9) {
+          return {
+            ...prevSecond,
+            miniSeconds: prevSecond.miniSeconds + 1
+          }
         }
-      }
-      if (prevSecond.maxSeconds === 5 && prevSecond.miniSeconds === 9) {
-        return {
-          ...prevSecond,
-          miniSeconds: 0,
-          maxSeconds: 0,
-          minMinutes: prevSecond.minMinutes ? prevSecond.minMinutes + 1 : 1
+        if (prevSecond.maxSeconds === 5 && prevSecond.miniSeconds === 9) {
+          return {
+            ...prevSecond,
+            miniSeconds: 0,
+            maxSeconds: 0,
+            minMinutes: prevSecond.minMinutes ? prevSecond.minMinutes + 1 : 1
+          }
         }
-      }
-      else if (prevSecond.minMinutes === 9) {
-        return {
-          ...prevSecond,
-          miniSeconds: 0,
-          maxSeconds: 0,
-          minMinutes: 0,
-          maxMinutes: prevSecond.maxMinutes ? prevSecond.maxMinutes + 1 : 1
+        else if (prevSecond.minMinutes === 9) {
+          return {
+            ...prevSecond,
+            miniSeconds: 0,
+            maxSeconds: 0,
+            minMinutes: 0,
+            maxMinutes: prevSecond.maxMinutes ? prevSecond.maxMinutes + 1 : 1
+          }
         }
-      }
-      else {
-        return ({
-          ...prevSecond,
-          miniSeconds: 0,
-          maxSeconds: prevSecond.maxSeconds ? prevSecond.maxSeconds + 1 : 1
-        })
-      }
-    }), 1000)
-    return () => clearInterval(intervalId)
-  }, [])
+        else {
+          return ({
+            ...prevSecond,
+            miniSeconds: 0,
+            maxSeconds: prevSecond.maxSeconds ? prevSecond.maxSeconds + 1 : 1
+          })
+        }
+      }), 1000)
+    }
+    return () => clearInterval(ref.current)
+  }, [tenzies])
 
+
+  useEffect(() => {
+    if (tenzies) {
+      clearInterval(ref.current)
+    }
+  }, [tenzies])
   function allNewDice(): DiceProps[] {
     const diceArray: DiceProps[] = Array(10).fill(true).map(() => (
       generateNewDice()))
@@ -103,7 +112,6 @@ function App() {
   }
 
   function holdDice(diceId: string) {
-    console.log(diceId)
     setDice(oldDice => oldDice.map(die => die.id === diceId ? ({ ...die, isHeld: !die.isHeld }) : die))
   }
   const diceList = dice.map((die) => <Die

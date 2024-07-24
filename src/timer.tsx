@@ -2,7 +2,6 @@ import React from 'react'
 import { TimeProp } from './App'
 
 function Timer(props: { seconds: TimeProp }) {
-    console.log(props.seconds)
     return (
         <div className='text-primary font-bold text-lg mt-5 float-right mx-5'>
 
