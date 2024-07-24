@@ -84,6 +84,7 @@ function App() {
       clearInterval(ref.current)
     }
   }, [tenzies])
+
   function allNewDice(): DiceProps[] {
     const diceArray: DiceProps[] = Array(10).fill(true).map(() => (
       generateNewDice()))
