@@ -1,4 +1,3 @@
-import React from 'react'
 import { TimeProp } from './App'
 
 function Timer(props: { seconds: TimeProp }) {
