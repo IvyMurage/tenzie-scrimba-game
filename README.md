@@ -3,6 +3,9 @@
 ## Overview
 The Tenzie Game is a simple project built with React that showcases the use of various React hooks such as useState, useEffect, and useRef. The game involves rolling dice until all dice show the same number. Players can hold dice to prevent them from rolling. A timer is included to track the amount of time the user takes to play the game.
 
+![Screenshot from 2024-07-24 19-13-30](https://github.com/user-attachments/assets/eceea9f0-1d03-4e88-a97a-844d2975456d)
+
+
 ## Features
 * Roll dice to change their values.
 * Hold specific dice to prevent them from rolling.
