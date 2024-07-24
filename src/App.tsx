@@ -1,7 +1,9 @@
 import { useState } from "react"
 import Die from "./Die"
+import { nanoid } from "nanoid"
 
 type DiceProps = {
+  id: string
   value: number,
   isHeld: boolean
 }
@@ -10,12 +12,20 @@ function App() {
   function allNewDice(): DiceProps[] {
     const diceArray: DiceProps[] = Array(10).fill(true).map(() => (
       {
+        id: nanoid(),
         value: Math.floor(Math.random() * 6) + 1,
         isHeld: false
       }))
     return diceArray
   }
-  const diceList = dice.map((die, index) => <Die key={`#dice-${index}`} value={die.value} />)
+  function holdDice(diceId: string) {
+    console.log(diceId)
+    setDice(oldDice => oldDice.map(die => die.id === diceId ? ({ ...die, isHeld: true }) : die))
+  }
+  const diceList = dice.map((die) => <Die
+    holdDice={() => holdDice(die.id)}
+    key={die.id} styles={{ backgroundColor: die.isHeld ? '#59E391' : '#F5F5F5' }}
+    value={die.value} />)
 
   function handleRollDice(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault()
